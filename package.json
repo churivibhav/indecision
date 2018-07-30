@@ -1,0 +1,23 @@
+{
+  "name": "indecision",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/churivibhav/indecision.git"
+  },
+  "author": "Vibhav Churi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/churivibhav/indecision/issues"
+  },
+  "homepage": "https://github.com/churivibhav/indecision#readme",
+  "dependencies": {
+    "babel-preset-env": "^1.5.2",
+    "babel-preset-react": "^6.24.1"
+  }
+}
