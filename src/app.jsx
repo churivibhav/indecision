@@ -1,35 +1,90 @@
-console.log("Starting app");
-const app = {
-  title: "Indecision",
-  subtitle: "Put your life in the hands of a computer",
-  options: ["One", "Two"]
-};
+class App extends React.Component {
+  constructor() {
+    super();
+    this.options = [];
+  }
 
-function getOptions(options) {
-  return <p>{options.length}</p>;
+  handleOption(e) {
+    e.preventDefault();
+    alert("handleOption");
+  }
+
+  render() {
+    return (
+      <div>
+        <Header title="Indesicion" subtitle="Put your life in hands of a computer!" />
+        <Action />
+        <Options options={this.options} />
+        <AddOption onAddOption={this.handleOption} />
+      </div>
+    );
+  }
 }
 
-function onFormSubmit(e) {
-  e.preventDefault();
-  const option = e.target.option.value;
-  app.options.push(option);
-  render();
+class Header extends React.Component {
+  render() {
+    return (
+      <div>
+        <h1>{this.props.title}</h1>
+        <h2>{this.props.subtitle}</h2>
+      </div>
+    );
+  }
 }
 
-function render() {
-  const template = (
-    <div>
-      <h3>{app.title}</h3>
-      {app.subtitle && <p>{app.subtitle}</p>}
-      <p>{app.options && app.options.length > 0 ? "Here are your options" : "No Options"}</p>
-      {getOptions(app.options)}
-      <form onSubmit={onFormSubmit}>
+class Action extends React.Component {
+  handlePick() {
+    alert("handlepick");
+  }
+  render() {
+    return (
+      <div>
+        <button onClick={this.handlePick}>What should I do?</button>
+      </div>
+    );
+  }
+}
+class Option extends React.Component {
+  render() {
+    return <div>{this.props.option}</div>;
+  }
+}
+
+class Options extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleRemoveAll = this.handleRemoveAll.bind(this); // bind is needed to get 'this' in the method
+  }
+
+  handleRemoveAll() {
+    alert("removeall");
+  }
+  render() {
+    return (
+      <div>
+        <p>{this.props.options.length}</p>
+        <button onClick={this.handleRemoveAll}>Remove All</button>
+        <ul>
+          {this.props.options.map(o => (
+            <li key={o}>
+              <Option option={o} />
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  }
+}
+
+class AddOption extends React.Component {
+  render() {
+    return (
+      <form onSubmit={this.props.onAddOption}>
         <input type="text" name="option" />
         <button>Add</button>
       </form>
-    </div>
-  );
-  ReactDOM.render(template, document.getElementById("app"));
+    );
+  }
 }
 
-render();
+ReactDOM.render(<App />, document.getElementById("app"));
