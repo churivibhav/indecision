@@ -1,3 +1,10 @@
-import { isAdult } from "./person";
+import React, { Component } from "react";
+import ReactDOM from "react-dom";
 
-console.log(`Jamie is ${isAdult(18) ? "an adult" : "not an adult"}`);
+class App extends Component {
+  render() {
+    return <h1>Hi</h1>;
+  }
+}
+
+ReactDOM.render(<App />, document.getElementById("app"));

@@ -21,9 +21,14 @@
   "homepage": "https://github.com/churivibhav/indecision#readme",
   "dependencies": {
     "babel-cli": "^6.24.1",
+    "babel-core": "^6.25.0",
+    "babel-loader": "^7.1.1",
     "babel-preset-env": "^1.5.2",
     "babel-preset-react": "^6.24.1",
     "live-server": "^1.2.0",
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1",
+    "validator": "^10.4.0",
     "webpack": "^3.1.0"
   }
 }
