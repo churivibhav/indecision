@@ -5,19 +5,55 @@ import React from "react";
 import AddOption from "./AddOption";
 
 export class AppRoot extends React.Component {
+  state = {
+    decision: undefined,
+    options: props.options
+  };
+
   constructor(props) {
     super(props);
-    this.handleAddOption = this.handleAddOption.bind(this);
-    this.handleRemoveAll = this.handleRemoveAll.bind(this);
-    this.handleRemoveOne = this.handleRemoveOne.bind(this);
-    this.handlePick = this.handlePick.bind(this);
     this.componentDidMount = this.componentDidMount.bind(this);
     this.componentDidUpdate = this.componentDidUpdate.bind(this);
-    this.state = {
-      decision: undefined,
-      options: props.options
-    };
   }
+
+  // Event Handlers
+  // Lambda functions get this from parent scope, no need to rebind this
+  handleAddOption = option => {
+    if (!option) {
+      return "Enter a valid value to add item";
+    } else if (this.state.options.indexOf(option) > -1) {
+      return "This option is already present";
+    }
+    this.setState(prevState => {
+      return {
+        options: [...prevState.options, option]
+      };
+    });
+  };
+  handleRemoveAll = () => {
+    console.log("remove all");
+    this.setState(() => {
+      return {
+        options: []
+      };
+    });
+  };
+  handleRemoveOne = option => {
+    this.setState(prevState => {
+      return {
+        options: prevState.options.filter(o => o !== option)
+      };
+    });
+  };
+  handlePick = () => {
+    this.setState(state => {
+      const randomNumber = Math.round(Math.random() * state.options.length);
+      return {
+        decision: state.options[randomNumber - 1]
+      };
+    });
+  };
+
   // Lifecycle method
   componentDidMount() {
     try {
@@ -44,42 +80,7 @@ export class AppRoot extends React.Component {
   componentWillUnmount() {
     console.log("App unmounted.");
   }
-  // Event Handlers
-  handleAddOption(option) {
-    if (!option) {
-      return "Enter a valid value to add item";
-    } else if (this.state.options.indexOf(option) > -1) {
-      return "This option is already present";
-    }
-    this.setState(prevState => {
-      return {
-        options: [...prevState.options, option]
-      };
-    });
-  }
-  handleRemoveAll() {
-    console.log("remove all");
-    this.setState(() => {
-      return {
-        options: []
-      };
-    });
-  }
-  handleRemoveOne(option) {
-    this.setState(prevState => {
-      return {
-        options: prevState.options.filter(o => o !== option)
-      };
-    });
-  }
-  handlePick() {
-    this.setState(state => {
-      const randomNumber = Math.round(Math.random() * state.options.length);
-      return {
-        decision: state.options[randomNumber - 1]
-      };
-    });
-  }
+
   render() {
     return (
       <div>
