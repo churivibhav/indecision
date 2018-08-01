@@ -5,12 +5,40 @@ class App extends React.Component {
     this.handleRemoveAll = this.handleRemoveAll.bind(this);
     this.handleRemoveOne = this.handleRemoveOne.bind(this);
     this.handlePick = this.handlePick.bind(this);
+    this.componentDidMount = this.componentDidMount.bind(this);
+    this.componentDidUpdate = this.componentDidUpdate.bind(this);
     this.state = {
       decision: undefined,
-      options: ["Learn React", "Watch Video", "Make Something"]
+      options: props.options
     };
   }
 
+  // Lifecycle method
+  componentDidMount() {
+    const json = localStorage.getItem("options");
+    const loadedOptions = JSON.parse(json);
+    console.log(loadedOptions);
+    if (loadedOptions) {
+      this.setState(() => {
+        return { options: loadedOptions };
+      });
+    }
+    console.log("Options loaded.");
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.options.length !== this.state.options.length) {
+      const json = JSON.stringify(this.state.options);
+      localStorage.setItem("options", json);
+      console.log("Options saved.");
+    }
+  }
+
+  componentWillUnmount() {
+    console.log("App unmounted.");
+  }
+
+  // Event Handlers
   handleAddOption(option) {
     if (!option) {
       return "Enter a valid value to add item";
@@ -70,60 +98,58 @@ class App extends React.Component {
   }
 }
 
-class Header extends React.Component {
-  render() {
-    return (
-      <div>
-        <h1>{this.props.title}</h1>
-        <h2>{this.props.subtitle}</h2>
-      </div>
-    );
-  }
-}
+App.defaultProps = {
+  options: []
+};
 
-class Action extends React.Component {
-  render() {
-    return (
-      <div>
-        <button onClick={this.props.onPick} disabled={!this.props.hasOptions}>
-          What should I do?
-        </button>
-        <div>{this.props.decision}</div>
-      </div>
-    );
-  }
-}
-class Option extends React.Component {
-  render() {
-    return (
-      <div>
-        {this.props.option} <a onClick={this.props.onRemove}>[Remove]</a>
-      </div>
-    );
-  }
-}
+const Header = props => {
+  return (
+    <div>
+      <h1>{props.title}</h1>
+      <h2>{props.subtitle}</h2>
+    </div>
+  );
+};
 
-class Options extends React.Component {
-  constructor(props) {
-    super(props);
-  }
+Header.defaultProps = {
+  title: "ABC",
+  subtitle: "DEF"
+};
 
-  render() {
-    return (
-      <div>
-        <p>{this.props.options.length}</p>
-        <button onClick={this.props.onRemoveAll}>Remove All</button>
-        <ul>
-          {this.props.options.map(o => (
-            <li key={o}>
-              <Option option={o} onRemove={() => this.props.onRemoveOne(o)} />
-            </li>
-          ))}
-        </ul>
-      </div>
-    );
-  }
-}
+const Action = props => {
+  return (
+    <div>
+      <button onClick={props.onPick} disabled={!props.hasOptions}>
+        What should I do?
+      </button>
+      <div>{props.decision}</div>
+    </div>
+  );
+};
+
+const Option = props => {
+  return (
+    <div>
+      {props.option} <a onClick={props.onRemove}>[X]</a>
+    </div>
+  );
+};
+
+const Options = props => {
+  return (
+    <div>
+      <p>{props.options.length}</p>
+      <button onClick={props.onRemoveAll}>Remove All</button>
+      <ul>
+        {props.options.map(o => (
+          <li key={o}>
+            <Option option={o} onRemove={() => props.onRemoveOne(o)} />
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
 
 class AddOption extends React.Component {
   constructor(props) {
@@ -133,6 +159,7 @@ class AddOption extends React.Component {
   handleAddOption(e) {
     e.preventDefault();
     const value = e.target.option.value.trim();
+    e.target.option.value = "";
     const error = this.props.onAddOption(value);
     if (!!error) {
       alert(error);
@@ -149,4 +176,7 @@ class AddOption extends React.Component {
   }
 }
 
-ReactDOM.render(<App />, document.getElementById("app"));
+ReactDOM.render(
+  <App options={["Learn React", "Watch Video", "Make Something"]} />,
+  document.getElementById("app")
+);
